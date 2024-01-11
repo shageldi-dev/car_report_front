@@ -1,5 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
+import { GetDashboard } from "../../types/getdashboard";
 
 export const data = [
   ["Wagty", "Ortalama bahasy"],
@@ -17,14 +18,26 @@ export const options = {
   legend: { position: "bottom" },
   colors: ["red"],
 };
+interface IProps {
+  data: GetDashboard | undefined;
+}
 
-const AveragePriceOverTimeChart = () => {
+const AveragePriceOverTimeChart = (props: IProps) => {
   return (
     <Chart
       chartType="LineChart"
       width="100%"
       height="400px"
-      data={data}
+      data={[
+        ["Wagty", "Ortalama bahasy"],
+        ...(props.data?.average_price_over_time?.buckets
+          ? // eslint-disable-next-line no-unsafe-optional-chaining
+            props.data?.average_price_over_time?.buckets.map((it) => [
+              it.key_as_string,
+              it.average_price.value,
+            ])
+          : []),
+      ]}
       options={options}
     />
   );

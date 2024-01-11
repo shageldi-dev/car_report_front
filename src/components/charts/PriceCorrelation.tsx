@@ -1,5 +1,6 @@
 import React from "react";
 import { Chart } from "react-google-charts";
+import { GetDashboard } from "../../types/getdashboard";
 
 export const data = [
   ["Ulag yyly", "Ortalama bahasy"],
@@ -20,15 +21,26 @@ export const options = {
   hAxis: { title: "Ulag yyly" },
   vAxis: { title: "Ortalama bahasy" },
 };
-
-const PriceCorrelation = () => {
+interface IProps {
+  data: GetDashboard | undefined;
+}
+const PriceCorrelation = (props: IProps) => {
   return (
     <Chart
       chartType="Scatter"
       width="100%"
       style={{ width: "100%" }}
       height="400px"
-      data={data}
+      data={[
+        ["Ulag yyly", "Ortalama bahasy"],
+        ...(props.data?.price_correlation_year?.buckets
+          ? // eslint-disable-next-line no-unsafe-optional-chaining
+            props.data?.price_correlation_year?.buckets.map((it) => [
+              `${it.key} yyl`,
+              it.price_and_year.value,
+            ])
+          : []),
+      ]}
       options={options}
     />
   );

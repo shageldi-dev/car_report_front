@@ -1,13 +1,14 @@
 import React from "react";
-import { Table } from "antd";
+import { Pagination, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { AllLogs } from "../types/allLogs";
 
 export interface DataType {
   key: string;
   ady: string;
   markasy: string;
-  bahasy: number;
-  yyly: string;
+  bahasy: number | undefined;
+  yyly: string | undefined;
   created_at: string;
 }
 
@@ -41,20 +42,36 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const AppTable: React.FC = () => (
-  <Table
-    columns={columns}
-    dataSource={[
-      {
-        ady: "X6",
-        markasy: "BMW",
-        bahasy: 42343,
-        yyly: "2018",
-        key: "",
-        created_at: "2024-01-03T12:23:07.763Z",
-      },
-    ]}
-  />
-);
+interface IProps {
+  data: AllLogs | undefined;
+  onPage: (page: number) => void;
+}
+
+const AppTable = (props: IProps) => {
+  return props.data ? (
+    <div>
+      <Table
+        columns={columns}
+        pagination={false}
+        dataSource={props.data?.hits?.hits.map((it) => ({
+          ady: it._source.ady,
+          markasy: it._source.markasy,
+          bahasy: it._source.bahasy,
+          yyly: it._source.yyly,
+          key: it._id,
+          created_at: it._source.created_at,
+        }))}
+      />
+      <Pagination
+        onChange={(e) => props.onPage(e)}
+        defaultCurrent={1}
+        showSizeChanger={false}
+        total={Math.ceil(props.data.hits.total.value / 20)}
+      />
+    </div>
+  ) : (
+    <div>Please wait...</div>
+  );
+};
 
 export default AppTable;

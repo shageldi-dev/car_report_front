@@ -47,14 +47,14 @@ const Home = () => {
     <Space style={{ padding: "22px", width: "100%" }} direction="vertical">
       <Statistics data={data} />
       <Space direction="vertical" style={{ width: "100%" }}>
-        <AveragePriceOverTimeChart />
-        <BrandPriceComparison />
-        <ModelPriceComparison />
-        <YearPriceComparison />
-        <DailyUpload />
+        <AveragePriceOverTimeChart data={data} />
+        <BrandPriceComparison data={data} />
+        <ModelPriceComparison data={data} />
+        <YearPriceComparison data={data} />
+        <DailyUpload data={data} />
         <Row>
           <Col sm={12}>
-            <PriceCorrelation />
+            <PriceCorrelation data={data} />
           </Col>
           <Col sm={1}></Col>
           <Col sm={11}>
